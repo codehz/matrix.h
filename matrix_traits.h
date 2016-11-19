@@ -146,15 +146,13 @@ struct store_proxy : matrix_traits<Number, Rows, Cols> {
         });
     }
 
-    template <bool cond = is_const, typename = std::enable_if_t<cond>>
     store_proxy(store_t ref, access_fn<Number, store_t, true> f)
         : ref(ref), const_access(f), access(f)
     {
     }
 
-    template <bool cond = !is_const, typename = std::enable_if_t<cond>>
     store_proxy(store_t ref, access_fn<Number, store_t, true> const_f,
-                access_fn<Number, store_t, false> f)
+                access_fn<Number, store_t, is_const> f)
         : ref(ref), const_access(const_f), access(f)
     {
     }

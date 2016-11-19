@@ -22,6 +22,9 @@ struct remove_const_reference<const T &&> {
     using type = T;
 };
 
+template <template <typename...>typename F, typename ...P>
+struct template_function_traits_impl;
+
 template <typename F>
 struct function_traits
     : public function_traits<std::remove_cv_t<decltype(&F::operator())>> {

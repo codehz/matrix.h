@@ -258,15 +258,17 @@ struct matrix_base : public matrix_traits<Number, Rows, Cols> {
             transpose_access<Number, matrix_base, true>);
     }
 
-    template<std::size_t nRows, std::size_t nCols>
-    auto vexpand(const matrix_size<nRows, nCols> &) {
+    template <std::size_t nRows, std::size_t nCols>
+    auto vexpand(const matrix_size<nRows, nCols> &)
+    {
         return make_proxy<Number, nRows, nCols, RealType, matrix_base, false>(
             *this, expand_access<Number, matrix_base, true>,
             expand_access<Number, matrix_base, false>);
     }
 
-    template<std::size_t nRows, std::size_t nCols>
-    auto vexpand(const matrix_size<nRows, nCols> &) const {
+    template <std::size_t nRows, std::size_t nCols>
+    auto vexpand(const matrix_size<nRows, nCols> &) const
+    {
         return make_proxy<Number, nRows, nCols, RealType, matrix_base, true>(
             *this, expand_access<Number, matrix_base, true>,
             expand_access<Number, matrix_base, true>);
@@ -356,7 +358,7 @@ struct matrix_base : public matrix_traits<Number, Rows, Cols> {
 
     Number norm()
     {
-        Number ret;
+        Number ret = 0;
         for_each([&ret](Number num) { ret += num * num; });
         return ret;
     }
@@ -540,10 +542,7 @@ struct matrix<Number, 1, 1, StoreType>
     {
     }
 
-    matrix(const Number &num)
-        : super_t({{num}})
-    {
-    }
+    matrix(const Number &num) : super_t({{num}}) {}
 
     auto &operator()(std::size_t pos) { return super_t::operator()(pos); }
 
@@ -593,7 +592,7 @@ struct matrix<Number, Length, Length, StoreType>
     {
     }
 
-    auto LUPDecomposition()
+    auto LUPDecomposition() const
     {
         typename super_t::real_array_t l, u, p;
         auto &a = *this;
@@ -635,7 +634,7 @@ struct matrix<Number, Length, Length, StoreType>
 
     template <template <typename, std::size_t, std::size_t> typename RStoreType>
     auto solve_equaltions(const typename super_t::template real_template<
-                          typename super_t::number_t, super_t::rows, 1, RStoreType> &b)
+                          typename super_t::number_t, super_t::rows, 1, RStoreType> &b) const
     {
         typename super_t::real_array_t l, u, p;
         std::tie(l, u, p) = LUPDecomposition();
@@ -666,7 +665,7 @@ template <typename Number, std::size_t Length,
           template <typename, std::size_t, std::size_t> typename StoreType = store_array>
 using vector_vert = matrix<Number, Length, 1, StoreType>;
 
-template <typename Number, 
+template <typename Number,
           template <typename, std::size_t, std::size_t> typename StoreType = store_array>
 using singularity = matrix<Number, 1, 1, StoreType>;
 }
